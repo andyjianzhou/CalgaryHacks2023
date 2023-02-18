@@ -32,3 +32,5 @@ print(*model_train, sep = "\n")
 
 # deploy model
 model.load(joblibFile)
+# predict off input data of region, year, month, day, and hour
+prediction = model.predict(input_data)
