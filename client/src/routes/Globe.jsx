@@ -4,10 +4,9 @@ import React from 'react'
 import * as ReactDOM from 'react-dom';
 import axios from 'axios';
 // follow the polygon layer example to add data
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 function World() {
-
     const { useState, useEffect, useMemo } = React;
     const [countries, setCountries] = useState({ features: []});
     const [hoverD, setHoverD] = useState();
@@ -61,11 +60,15 @@ function World() {
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
       backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
       lineHoverPrecision={0}
-      polygonsData={countries.features.filter(d => d.properties.ISO_A2 !== 'AQ')}
-      polygonAltitude={d => d === hoverD ? 0.12 : 0.06}
-      polygonCapColor={d => d === hoverD ? 'steelblue' : colorScale(getVal(d))}
-      polygonSideColor={() => 'rgba(0, 100, 0, 0.15)'}
-      polygonStrokeColor={() => '#111'}
+      polygonsData={countries.features.filter(
+        (d) => d.properties.ISO_A2 !== "AQ"
+      )}
+      polygonAltitude={(d) => (d === hoverD ? 0.12 : 0.06)}
+      polygonCapColor={(d) =>
+        d === hoverD ? "steelblue" : colorScale(getVal(d))
+      }
+      polygonSideColor={() => "rgba(0, 100, 0, 0.15)"}
+      polygonStrokeColor={() => "#111"}
       polygonLabel={({ properties: d }) => `
         <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
         GDP: <i>${d.GDP_MD_EST}</i> M$<br/>
@@ -107,4 +110,4 @@ function World() {
   );
 }
 
-export default World
+export default World;
