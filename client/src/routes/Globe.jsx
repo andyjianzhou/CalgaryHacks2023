@@ -1,5 +1,5 @@
 import Globe from 'react-globe.gl';
-import { Modal, Row, Button, Text, Checkbox, Input } from "@nextui-org/react";
+import { Modal, Row, Button, Text, Col} from "@nextui-org/react";
 import React from 'react'
 import * as ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -84,26 +84,28 @@ function World() {
         blur
         aria-labelledby="modal-title"
         open={visible}
+        //width="500px"
         onClose={closeHandler}
       >
         <Modal.Header>
-          <Text id="modal-title" size={18}>
-            Welcome to
-            <Text b size={18}>
-              NextUI
-            </Text>
+          <Text id="modal-title" b size={30}>
+              Stats
           </Text>
         </Modal.Header>
         <Modal.Body>
-          <Row justify="space-between">
-            <Text size={18}>Top Import Partners</Text>
-            <Text size={14}>{importPartners[0]?.country}</Text>
-            <Text size={14}>{importPartners[1]?.country}</Text>
-            <Text size={14}>{importPartners[2]?.country}</Text>
-            <Text size={18}>Top Export Partners</Text>
-            <Text size={14}>{exportPartners[0]?.country}</Text>
-            <Text size={14}>{exportPartners[1]?.country}</Text>
-            <Text size={14}>{exportPartners[2]?.country}</Text>
+          <Row>
+          <Col span={12}>
+            <Text size={18} b>Top Suppliers</Text>
+            <Text size={16}>{importPartners[0]?.country}</Text>
+            <Text size={16}>{importPartners[1]?.country}</Text>
+            <Text size={16}>{importPartners[2]?.country}</Text>
+          </Col>
+          <Col span={12} align="right">
+            <Text size={18} b>Top Supplied</Text>
+            <Text size={16}>{exportPartners[0]?.country}</Text>
+            <Text size={16}>{exportPartners[1]?.country}</Text>
+            <Text size={16}>{exportPartners[2]?.country}</Text>
+          </Col>
           </Row>
         </Modal.Body>
       </Modal>
