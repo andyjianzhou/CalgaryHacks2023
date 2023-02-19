@@ -3,7 +3,7 @@ import React from "react";
 function Navbar() {
   return (
     <nav className="w-full absolute bg-[#18181B]">
-      <div className="flex py-6 max-w-screen-xl w-[90%] mx-auto items-center gap-32 lg:justify-start justify-evenly">
+      <div className="flex py-6 max-w-screen-xl w-[90%] mx-auto items-center lg:gap-32 gap-0 lg:justify-start justify-evenly">
         {/* Logo */}
         <h1 className="shrink-0 font-bold text-lg">CalgaryHacks</h1>
 
