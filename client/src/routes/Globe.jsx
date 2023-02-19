@@ -13,23 +13,27 @@ import * as ReactDOM from "react-dom";
 import axios from "axios";
 // follow the polygon layer example to add data
 import * as d3 from "d3";
+import { useRef, useEffect } from 'react';
 
 function World() {
-  const { useState, useEffect, useMemo } = React;
-  const [countries, setCountries] = useState({ features: [] });
-  const [hoverD, setHoverD] = useState();
-  const [visible, setVisible] = React.useState(false);
-  const [exportPartners, setExportPartners] = useState([]);
-  const [importPartners, setImportPartners] = useState([]);
-  const [predYield, setYield] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+    const { useState, useEffect, useMemo } = React;
+    const [countries, setCountries] = useState({ features: []});
+    const [hoverD, setHoverD] = useState();
+    const [visible, setVisible] = React.useState(false);
+    const [exportPartners, setExportPartners] = useState([]);
+    const [importPartners, setImportPartners] = useState([]);
 
-  const handler = (polygon) => {
-    setVisible(true);
-    console.log(polygon.properties.ISO_A3);
-    axios
-      .get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`)
-      .then((response) => {
+    const globeRef = useRef(null);
+    useEffect(() => {
+      const globe = globeRef.current;
+  
+      globe.controls().autoRotate = true;
+      globe.controls().autoRotateSpeed = 0.1;
+    }, [globeRef]);
+
+    const handler = (polygon) => {
+      setVisible(true);
+      axios.get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`).then(response => {
         // handle the response data
         setExportPartners(response?.data);
         console.log(response?.data);
