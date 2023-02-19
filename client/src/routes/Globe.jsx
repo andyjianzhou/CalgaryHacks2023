@@ -14,6 +14,7 @@ import axios from "axios";
 // follow the polygon layer example to add data
 import * as d3 from "d3";
 import { useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function World() {
   const { useState, useEffect, useMemo } = React;
@@ -128,27 +129,44 @@ function World() {
     const randomRain = Math.random() * (1 - 0.5) + 0.5;
     const randomPesticides = Math.random() * (0.1 - 0) + 0;
     const randomTemp = Math.random() * (0.2 - 0) + 0;
-    console.log("Pred Yields: " + random, randomRain, randomPesticides, randomTemp);
+    console.log(
+      "Pred Yields: " + random,
+      randomRain,
+      randomPesticides,
+      randomTemp
+    );
 
     for (let i = 0; i < predYield.length; i++) {
       if (predYield[i].yield_predicted != null) {
-        dict[predYield[i].Country] = [parseFloat(predYield[i].yield_predicted/10000).toFixed(2), parseFloat(predYield[i].average_rain_fall_mm_per_year).toFixed(2), predYield[i].pesticides_tonnes, parseFloat(predYield[i].avg_temp).toFixed(2)];
+        dict[predYield[i].Country] = [
+          parseFloat(predYield[i].yield_predicted / 10000).toFixed(2),
+          parseFloat(predYield[i].average_rain_fall_mm_per_year).toFixed(2),
+          predYield[i].pesticides_tonnes,
+          parseFloat(predYield[i].avg_temp).toFixed(2),
+        ];
       }
     }
     // if the country name is in the dictionary, add the yield_predicted to the country feature
     for (let i = 0; i < countries.features.length; i++) {
       if (countries.features[i].properties.ADMIN in dict) {
-        countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN][0];
-        countries.features[i].properties.rainfall = dict[countries.features[i].properties.ADMIN][1];
-        countries.features[i].properties.pesticides = dict[countries.features[i].properties.ADMIN][2];
-        countries.features[i].properties.temperature = dict[countries.features[i].properties.ADMIN][3];
-
+        countries.features[i].properties.yield_predicted =
+          dict[countries.features[i].properties.ADMIN][0];
+        countries.features[i].properties.rainfall =
+          dict[countries.features[i].properties.ADMIN][1];
+        countries.features[i].properties.pesticides =
+          dict[countries.features[i].properties.ADMIN][2];
+        countries.features[i].properties.temperature =
+          dict[countries.features[i].properties.ADMIN][3];
       } else {
-        countries.features[i].properties.yield_predicted = parseFloat(random/10000).toFixed(2);
-        countries.features[i].properties.rainfall = parseFloat(randomRain).toFixed(2);
-        countries.features[i].properties.pesticides = parseFloat(randomPesticides).toFixed(2);
-        countries.features[i].properties.temperature = parseFloat(randomTemp).toFixed(2);
-
+        countries.features[i].properties.yield_predicted = parseFloat(
+          random / 10000
+        ).toFixed(2);
+        countries.features[i].properties.rainfall =
+          parseFloat(randomRain).toFixed(2);
+        countries.features[i].properties.pesticides =
+          parseFloat(randomPesticides).toFixed(2);
+        countries.features[i].properties.temperature =
+          parseFloat(randomTemp).toFixed(2);
       }
     }
   }, [predYield]);
@@ -161,109 +179,116 @@ function World() {
   );
   colorScale.domain([0, maxVal]);
   return (
-    <NextUIProvider theme={theme}>
-      <Globe
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-        bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-        backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-        lineHoverPrecision={0}
-        ref={globeRef}
-        polygonsData={countries.features.filter(
-          (d) => d.properties.ISO_A2 !== "AQ"
-        )}
-        polygonAltitude={(d) => (d === hoverD ? 0.12 : 0.06)}
-        polygonCapColor={(d) =>
-          d === hoverD ? "steelblue" : colorScale(getVal(d))
-        }
-        polygonSideColor={() => "rgba(0, 100, 0, 0.15)"}
-        polygonStrokeColor={() => "#111"}
-        polygonLabel={({ properties: d }) => `
+    <>
+      <Link to="/">
+        <button className="absolute top-0 left-0 z-10 border-2 border-slate-500 rounded-xl text-xl font-bold aspect-square mt-2 ml-2 w-12 bg-slate-900">
+          &lt;
+        </button>
+      </Link>
+
+      <NextUIProvider theme={theme}>
+        <Globe
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+          backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+          lineHoverPrecision={0}
+          ref={globeRef}
+          polygonsData={countries.features.filter(
+            (d) => d.properties.ISO_A2 !== "AQ"
+          )}
+          polygonAltitude={(d) => (d === hoverD ? 0.12 : 0.06)}
+          polygonCapColor={(d) =>
+            d === hoverD ? "steelblue" : colorScale(getVal(d))
+          }
+          polygonSideColor={() => "rgba(0, 100, 0, 0.15)"}
+          polygonStrokeColor={() => "#111"}
+          polygonLabel={({ properties: d }) => `
         <div style="background: rgba(0, 0, 0, 0.5); color: #fff; padding: 0.5em; border-radius: 10px;"> 
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
           Crop Yield: <i>${d.yield_predicted}</i> t/ha<br/>
           Population: <i>${d.POP_EST}</i> <br/>
         </div>
       `}
-        onPolygonHover={setHoverD}
-        onPolygonClick={() => handler(hoverD)}
-        polygonsTransitionDuration={300}
-      />
-      <Modal
-        closeButton
-        blur
-        aria-labelledby="modal-title"
-        open={visible}
-        //width="500px"
-        onClose={closeHandler}
-      >
-        <Modal.Header>
-          <Text id="modal-title" b size={30}>
-            Stats
-          </Text>
-        </Modal.Header>
-        <Modal.Body>
-          <Row>
-            <Col span={12}>
-              <Text size={18} b>
-                Top Suppliers
-              </Text>
-              {isLoading ? (
-                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
-              ) : (
-                <Text size={16}>{importPartners[0]?.country}</Text>
-              )}
-              {isLoading ? (
-                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
-              ) : (
-                <Text size={16}>{importPartners[1]?.country}</Text>
-              )}
-              {isLoading ? (
-                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
-              ) : (
-                <Text size={16}>{importPartners[2]?.country}</Text>
-              )}
-            </Col>
-            <Col span={12} align="right">
-              <Text size={18} b>
-                Top Supplied
-              </Text>
-              {isLoading ? (
-                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
-              ) : (
-                <Text size={16}>{exportPartners[0]?.country}</Text>
-              )}
-              {isLoading ? (
-                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
-              ) : (
-                <Text size={16}>{exportPartners[1]?.country}</Text>
-              )}
-              {isLoading ? (
-                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
-              ) : (
-                <Text size={16}>{exportPartners[2]?.country}</Text>
-              )}
-            </Col>
-            
-          </Row>
-          <Row>
-            <Col span={12}>
-              <Text size={18} b>
-                Avg Rain percipitation (mm)
-              </Text>
+          onPolygonHover={setHoverD}
+          onPolygonClick={() => handler(hoverD)}
+          polygonsTransitionDuration={300}
+        />
+        <Modal
+          closeButton
+          blur
+          aria-labelledby="modal-title"
+          open={visible}
+          //width="500px"
+          onClose={closeHandler}
+        >
+          <Modal.Header>
+            <Text id="modal-title" b size={30}>
+              Stats
+            </Text>
+          </Modal.Header>
+          <Modal.Body>
+            <Row>
+              <Col span={12}>
+                <Text size={18} b>
+                  Top Suppliers
+                </Text>
+                {isLoading ? (
+                  <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+                ) : (
+                  <Text size={16}>{importPartners[0]?.country}</Text>
+                )}
+                {isLoading ? (
+                  <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+                ) : (
+                  <Text size={16}>{importPartners[1]?.country}</Text>
+                )}
+                {isLoading ? (
+                  <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+                ) : (
+                  <Text size={16}>{importPartners[2]?.country}</Text>
+                )}
+              </Col>
+              <Col span={12} align="right">
+                <Text size={18} b>
+                  Top Supplied
+                </Text>
+                {isLoading ? (
+                  <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+                ) : (
+                  <Text size={16}>{exportPartners[0]?.country}</Text>
+                )}
+                {isLoading ? (
+                  <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+                ) : (
+                  <Text size={16}>{exportPartners[1]?.country}</Text>
+                )}
+                {isLoading ? (
+                  <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+                ) : (
+                  <Text size={16}>{exportPartners[2]?.country}</Text>
+                )}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Text size={18} b>
+                  Avg Rain percipitation (mm)
+                </Text>
                 <Text size={16}>{hoverD?.properties.rainfall}</Text>
-              <Text size={18} b>
-                Avg Temperature (C)
-              </Text>
+                <Text size={18} b>
+                  Avg Temperature (C)
+                </Text>
                 <Text size={16}>{hoverD?.properties.temperature}</Text>
                 <Text size={18} b>
-                Avg Pesticides (tonnes)
-              </Text>
+                  Avg Pesticides (tonnes)
+                </Text>
                 <Text size={16}>{hoverD?.properties.pesticides}</Text>
-            </Col>
-          </Row>
-        </Modal.Body>
-      </Modal>
-    </NextUIProvider>
+              </Col>
+            </Row>
+          </Modal.Body>
+        </Modal>
+      </NextUIProvider>
+    </>
   );
 }
 

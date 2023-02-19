@@ -10,7 +10,7 @@ function Home() {
 
   const globeRef = useRef(null);
   const handleClick = () => {
-    window.location.href = '/globe';
+    window.location.href = "/globe";
   };
 
   useEffect(() => {
