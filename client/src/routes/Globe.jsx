@@ -1,5 +1,5 @@
 import Globe from 'react-globe.gl';
-import { Modal } from '@nextui-org/react';
+import { Modal, Row, Button, Text, Checkbox, Input } from "@nextui-org/react";
 import React from 'react'
 import * as ReactDOM from 'react-dom';
 // follow the polygon layer example to add data
@@ -10,6 +10,12 @@ function World() {
     const { useState, useEffect, useMemo } = React;
     const [countries, setCountries] = useState({ features: []});
     const [hoverD, setHoverD] = useState();
+    const [visible, setVisible] = React.useState(false);
+    const handler = () => setVisible(true);
+    const closeHandler = () => {
+      setVisible(false);
+      console.log("closed");
+    };
 
     useEffect(() => {
         // load data
@@ -28,6 +34,7 @@ function World() {
     );
     colorScale.domain([0, maxVal]);
     return (
+    <div>
     <Globe
       globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
@@ -44,9 +51,31 @@ function World() {
         Population: <i>${d.POP_EST}</i>
       `}
       onPolygonHover={setHoverD}
-      onPolygonClick={showModal}
+      onPolygonClick={handler}
       polygonsTransitionDuration={300}
     />
+      <Modal
+        closeButton
+        blur
+        aria-labelledby="modal-title"
+        open={visible}
+        onClose={closeHandler}
+      >
+        <Modal.Header>
+          <Text id="modal-title" size={18}>
+            Welcome to
+            <Text b size={18}>
+              NextUI
+            </Text>
+          </Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Row justify="space-between">
+            <Text size={14}>Forgot password?</Text>
+          </Row>
+        </Modal.Body>
+      </Modal>
+    </div>
   );
 }
 
