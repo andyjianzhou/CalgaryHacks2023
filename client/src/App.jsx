@@ -1,14 +1,14 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import MainPage from "./routes/MainPage";
+import Home from "./routes/Home";
 import Globe from "./routes/Globe";
 
 // Add all routes here
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<MainPage/>
+    element: <Home />,
   },
 
   {
@@ -22,7 +22,6 @@ function App() {
     <>
       <Navbar />
       <RouterProvider router={router} />
-
     </>
   );
 }
