@@ -1,5 +1,5 @@
 import Globe from 'react-globe.gl';
-import { Modal, Row, Button, Text, Col} from "@nextui-org/react";
+import { Modal, Row, Button, Text, Col, NextUIProvider, createTheme} from "@nextui-org/react";
 import React from 'react'
 import * as ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -46,6 +46,35 @@ function World() {
     
     const colorScale = d3.scaleSequentialSqrt(d3.interpolateYlOrRd);
 
+    const theme = createTheme({
+      type: "dark", // it could be "light" or "dark"
+      theme: {
+        colors: {
+          // brand colors
+          primaryLight: '$green200',
+          primaryLightHover: '$green300',
+          primaryLightActive: '$green400',
+          primaryLightContrast: '$green600',
+          primary: '#4ADE7B',
+          primaryBorder: '$green500',
+          primaryBorderHover: '$green600',
+          primarySolidHover: '$green700',
+          primarySolidContrast: '$white',
+          primaryShadow: '$green500',
+    
+          gradient: 'linear-gradient(112deg, $blue100 -25%, $pink500 -10%, $purple500 80%)',
+          link: '#5E1DAD',
+    
+          // you can also create your own color
+          myColor: '#ff4ecd'
+    
+          // ...  more colors
+        },
+        space: {},
+        fonts: {}
+      }
+    })
+
     // GDP per capita (avoiding countries with small pop)
     const getVal = feat => feat.properties.GDP_MD_EST / Math.max(1e5, feat.properties.POP_EST);
 
@@ -55,7 +84,7 @@ function World() {
     );
     colorScale.domain([0, maxVal]);
     return (
-    <div>
+    <NextUIProvider theme={theme}>
     <Globe
       globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
@@ -109,7 +138,7 @@ function World() {
           </Row>
         </Modal.Body>
       </Modal>
-    </div>
+    </NextUIProvider>
   );
 }
 
