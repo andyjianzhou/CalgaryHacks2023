@@ -14,6 +14,7 @@ function World() {
     const [exportPartners, setExportPartners] = useState([]);
     const [importPartners, setImportPartners] = useState([]);
     const [predYield, setYield] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handler = () => {
       setVisible(true);
@@ -88,8 +89,6 @@ function World() {
       }
     })
 
-    // GDP per capita (avoiding countries with small pop)
-    const getVal = feat => feat.properties.GDP_MD_EST / Math.max(1e5, feat.properties.POP_EST);
     // feat is the country, map, then find it's column data yield_predicted
     // const getVal = feat => feat.properties.yield_predicted;
     // console.log(predYield)
@@ -100,30 +99,32 @@ function World() {
     // create a dictionary of country name and yield_predicted
     const dict = {};
 
-    // make random range of numbers between 10000 - 50000
-    const random = Math.floor(Math.random() * 50000) + 10000;
+    useEffect(() => {
+      // make random range of numbers between 10000 - 50000
+      const random = Math.floor(Math.random() * 50000) + 10000;
 
-    for (let i = 0; i < predYield.length; i++) {
-      if (predYield[i].yield_predicted != null) {
-        dict[predYield[i].Country] = predYield[i].yield_predicted;
-      } 
-    }
-    // if the country name is in the dictionary, add the yield_predicted to the country feature
-    for (let i = 0; i < countries.features.length; i++) {
-      if (countries.features[i].properties.ADMIN in dict) {
-        countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN];
-        console.log("added to " + countries.features[i].properties.ADMIN)
-      } else {
-        countries.features[i].properties.yield_predicted = random;
+      for (let i = 0; i < predYield.length; i++) {
+        if (predYield[i].yield_predicted != null) {
+          dict[predYield[i].Country] = predYield[i].yield_predicted;
+        } 
       }
-    }
+      // if the country name is in the dictionary, add the yield_predicted to the country feature
+      for (let i = 0; i < countries.features.length; i++) {
+        if (countries.features[i].properties.ADMIN in dict) {
+          countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN];
+          console.log("added to " + countries.features[i].properties.ADMIN)
+        } else {
+          countries.features[i].properties.yield_predicted = random;
+        }
+      }
+      
+  }, [predYield]);
+    // color property
+    const getVal = feat => feat.properties.yield_predicted;
 
-    console.log(countries.features)
-
-    
     const maxVal = useMemo(
       () => Math.max(...countries.features.map(getVal)),
-      [countries]
+      [countries, getVal]
     );
     colorScale.domain([0, maxVal]);
     return (
