@@ -1,17 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
     <nav className="w-full absolute bg-[#18181B]">
-      <div className="flex py-6 max-w-screen-xl w-[90%] mx-auto items-center lg:gap-32 gap-0 lg:justify-start justify-evenly">
+      <div className="flex py-6 max-w-screen-xl w-[90%] mx-auto items-center lg:gap-32 gap-4 lg:justify-start justify-evenly flex-col lg:flex-row">
         {/* Logo */}
-        <h1 className="shrink-0 font-bold text-lg">CalgaryHacks</h1>
+        <Link to="/">
+          <h1 className="shrink-0 font-bold text-lg">CalgaryHacks</h1>
+        </Link>
 
         {/* Links */}
-        <div className="lg:flex gap-11 shrink w-full lg:visible hidden">
-          <p className="opacity-75 hover:opacity-100 transition-opacity duration-300">
-            Home
-          </p>
+        <div className="flex lg:justify-end justify-center gap-11 shrink w-full">
+          <Link to="/">
+            <p className="opacity-75 hover:opacity-100 transition-opacity duration-300">
+              Home
+            </p>
+          </Link>
           <p className="opacity-75 hover:opacity-100 transition-opacity duration-300">
             How it works
           </p>
@@ -19,11 +24,6 @@ function Navbar() {
             GitHub
           </p>
         </div>
-
-        {/* Demo button */}
-        <button className="px-8 bg-gray-800/75 hover:bg-gray-700/50 transition-color duration-300 rounded-md py-2 shrink-0">
-          Try it out
-        </button>
       </div>
     </nav>
   );
