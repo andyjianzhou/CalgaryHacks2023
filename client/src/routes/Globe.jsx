@@ -13,23 +13,27 @@ import * as ReactDOM from "react-dom";
 import axios from "axios";
 // follow the polygon layer example to add data
 import * as d3 from "d3";
+import { useRef, useEffect } from 'react';
 
 function World() {
-  const { useState, useEffect, useMemo } = React;
-  const [countries, setCountries] = useState({ features: [] });
-  const [hoverD, setHoverD] = useState();
-  const [visible, setVisible] = React.useState(false);
-  const [exportPartners, setExportPartners] = useState([]);
-  const [importPartners, setImportPartners] = useState([]);
-  const [predYield, setYield] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+    const { useState, useEffect, useMemo } = React;
+    const [countries, setCountries] = useState({ features: []});
+    const [hoverD, setHoverD] = useState();
+    const [visible, setVisible] = React.useState(false);
+    const [exportPartners, setExportPartners] = useState([]);
+    const [importPartners, setImportPartners] = useState([]);
 
-  const handler = (polygon) => {
-    setVisible(true);
-    console.log(polygon.properties.ISO_A3);
-    axios
-      .get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`)
-      .then((response) => {
+    const globeRef = useRef(null);
+    useEffect(() => {
+      const globe = globeRef.current;
+  
+      globe.controls().autoRotate = true;
+      globe.controls().autoRotateSpeed = 0.1;
+    }, [globeRef]);
+
+    const handler = (polygon) => {
+      setVisible(true);
+      axios.get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`).then(response => {
         // handle the response data
         setExportPartners(response?.data);
         console.log(response?.data);
@@ -43,6 +47,7 @@ function World() {
       .then((response) => {
         // handle the response data
         setImportPartners(response?.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         // handle any errors
@@ -50,6 +55,7 @@ function World() {
       });
   };
   const closeHandler = () => {
+    setIsLoading(true);
     setVisible(false);
     console.log("closed");
   };
@@ -166,7 +172,6 @@ function World() {
         }
         polygonSideColor={() => "rgba(0, 100, 0, 0.15)"}
         polygonStrokeColor={() => "#111"}
-        
         polygonLabel={({ properties: d }) => `
         <div style="background: rgba(0, 0, 0, 0.5); color: #fff; padding: 0.5em; border-radius: 10px;"> 
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
@@ -197,17 +202,41 @@ function World() {
               <Text size={18} b>
                 Top Suppliers
               </Text>
-              <Text size={16}>{importPartners[0]?.country}</Text>
-              <Text size={16}>{importPartners[1]?.country}</Text>
-              <Text size={16}>{importPartners[2]?.country}</Text>
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{importPartners[0]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{importPartners[1]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{importPartners[2]?.country}</Text>
+              )}
             </Col>
             <Col span={12} align="right">
               <Text size={18} b>
                 Top Supplied
               </Text>
-              <Text size={16}>{exportPartners[0]?.country}</Text>
-              <Text size={16}>{exportPartners[1]?.country}</Text>
-              <Text size={16}>{exportPartners[2]?.country}</Text>
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{exportPartners[0]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{exportPartners[1]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{exportPartners[2]?.country}</Text>
+              )}
             </Col>
             
           </Row>

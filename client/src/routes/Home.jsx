@@ -9,6 +9,9 @@ function Home() {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
   const globeRef = useRef(null);
+  const handleClick = () => {
+    window.location.href = '/globe';
+  };
 
   useEffect(() => {
     const globe = globeRef.current;
@@ -16,6 +19,7 @@ function Home() {
     globe.controls().autoRotate = true;
     globe.controls().autoRotateSpeed = 1;
     globe.controls().enableZoom = false;
+    globe.controls().enableRotate = false;
   }, [globeRef]);
 
   return (
@@ -61,6 +65,7 @@ function Home() {
               width={800}
               height={800}
               backgroundColor="rgb(0,0,0,0)"
+              onGlobeClick={handleClick}
             />
           </div>
         </div>
