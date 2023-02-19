@@ -172,16 +172,6 @@ function World() {
   // avgYieldPerItemCountry = {};
   useEffect(() => {
     // make random range of numbers between 10000 - 50000
-    const random = Math.floor(Math.random() * 50000) + 10000;
-    const randomRain = Math.random() * (1 - 0.5) + 0.5;
-    const randomPesticides = Math.random() * (0.1 - 0) + 0;
-    const randomTemp = Math.random() * (0.2 - 0) + 0;
-    console.log(
-      "Pred Yields: " + random,
-      randomRain,
-      randomPesticides,
-      randomTemp
-    );
 
     for (let i = 0; i < predYield.length; i++) {
       if (predYield[i].yield_predicted != null) {
@@ -230,6 +220,11 @@ function World() {
     console.log("Dictionary Items: ", dictTest);
     // if the country name is in the dictionary, add the yield_predicted to the country feature
     for (let i = 0; i < countries.features.length; i++) {
+      const random = Math.floor(Math.random() * 50000) + 10000;
+      const randomRain = Math.random() * (1 - 0.5) + 0.5;
+      const randomPesticides = Math.random() * (0.1 - 0) + 0;
+      const randomTemp = Math.random() * (0.2 - 0) + 0;
+
       if (countries.features[i].properties.ADMIN in dict) {
         countries.features[i].properties.yield_predicted =
           dict[countries.features[i].properties.ADMIN][0];
