@@ -2,6 +2,8 @@ from django.http import HttpResponse
 import json
 import joblib
 import sklearn
+import pandas as pd
+import csv
 def index(request):
     model_path = "./modelDecisionTreeTes.pkl"
     model = joblib.load(model_path)
@@ -15,6 +17,11 @@ def index(request):
     # forecase the crop yield for the following values:
     print(model.feature_names)
     predictions = model.predict([request])
-    print(predictions)
-    # send it over to frontend as json
-    return HttpResponse(json.dumps(predictions), content_type="application/json")
+    
+    
+    pred_df = pd.DataFrame('LivePreds/preds.csv')
+    json_preds = pred_df.to_json('LivePreds/preds.json')
+    # create API response and send it to the frontend
+    response = HttpResponse(json_preds, content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response

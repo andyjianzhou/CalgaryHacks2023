@@ -8,6 +8,14 @@ from sklearn import svm
 import joblib
 
 from sklearn.metrics import r2_score
+
+
+yield_df_onehot = pd.get_dummies(yield_df, columns=['Area',"Item"], prefix = ['Country',"Item"])
+yield_df_onehot
+features=yield_df_onehot.loc[:, yield_df_onehot.columns != 'hg/ha_yield']
+label=yield_df['hg/ha_yield']
+features.head()
+
 def compare_models(model):
     model_name = model.__class__.__name__
     fit=model.fit(train_data,train_labels)
@@ -34,3 +42,6 @@ print(*model_train, sep = "\n")
 model.load(joblibFile)
 # predict off input data of region, year, month, day, and hour
 prediction = model.predict(input_data)
+
+#save teset_df to csv file
+test_df.to_csv('test.csv', index=False)
