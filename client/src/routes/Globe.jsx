@@ -248,15 +248,27 @@ function World() {
               <Text size={18} b>
                 Avg Rain percipitation (mm)
               </Text>
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
                 <Text size={16}>{hoverD?.properties.rainfall}</Text>
+              )}
               <Text size={18} b>
                 Avg Temperature (C)
               </Text>
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
                 <Text size={16}>{hoverD?.properties.temperature}</Text>
+              )}
                 <Text size={18} b>
                 Avg Pesticides (tonnes)
               </Text>
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
                 <Text size={16}>{hoverD?.properties.pesticides}</Text>
+              )}
             </Col>
           </Row>
         </Modal.Body>
