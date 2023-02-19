@@ -1,4 +1,5 @@
-import express from ('express');
+const express = require('express');
+const csv = require('csv-parser');
 const app = express();
 const port = 8000;
 const fs = require('fs');
@@ -22,12 +23,24 @@ app.get('/', (req, res) => {
   // console.log(model.feature_names);
   // predictions = model.predict([request]);
 
-  const preds = fs.readFileSync(path.join(__dirname, 'CropWatch', 'CropWatch', 'LivePreds', 'preds.json'));
-  const json_preds = JSON.parse(preds);
+  // const preds = fs.readFileSync(path.join(__dirname, 'LivePreds', 'preds.csv'));
+  const results = [];
+  let jsonData = '';
+  fs.createReadStream('LivePreds/preds.csv')
+    .pipe(csv())
+    .on('data', (data) => {
+      results.push(data);
+    })
+    .on('end', () => {
+      jsonData = JSON.stringify(results);
+      console.log('CSV file successfully processed');
+    });
+
+
   // create API response and send it to the frontend
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.send(JSON.stringify(json_preds));
+  res.send(jsonData);
 });
 
 app.listen(port, () => {
