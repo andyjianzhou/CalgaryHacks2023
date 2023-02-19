@@ -5,6 +5,12 @@ const port = 8000;
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const axios = require('axios');
+const { parseString } = require('xml2js');
+
+const regionCodes = ["WLD", "NAC", "ECS", "EAS", "LCN", "SSF", "SAS", "MEA"];
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -35,7 +41,6 @@ app.get('/', (req, res) => {
       jsonData = JSON.stringify(results);
       console.log('CSV file successfully processed');
     });
-
 
   // create API response and send it to the frontend
   res.setHeader('Content-Type', 'application/json');

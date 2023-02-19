@@ -15,17 +15,18 @@ function World() {
     const [importPartners, setImportPartners] = useState([]);
     const handler = () => {
       setVisible(true);
-      axios.get(`http://127.0.0.1:8000/get_export_partners/?country_code=usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/exportPartners/usa`).then(response => {
         // handle the response data
-        setExportPartners(response.data.country);
+        setExportPartners(response?.data);
+        console.log(response?.data)
       })
       .catch(error => {
         // handle any errors
         console.error(error);
       });
-      axios.get(`http://127.0.0.1:8000/get_import_partners/?country_code=usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/importPartners/usa`).then(response => {
         // handle the response data
-        setImportPartners(response.data.country);
+        setImportPartners(response?.data);
       })
       .catch(error => {
         // handle any errors
@@ -96,13 +97,13 @@ function World() {
         <Modal.Body>
           <Row justify="space-between">
             <Text size={18}>Top Import Partners</Text>
-            <Text size={14}>{importPartners[0]}</Text>
-            <Text size={14}>{importPartners[1]}</Text>
-            <Text size={14}>{importPartners[2]}</Text>
+            <Text size={14}>{importPartners[0]?.country}</Text>
+            <Text size={14}>{importPartners[1]?.country}</Text>
+            <Text size={14}>{importPartners[2]?.country}</Text>
             <Text size={18}>Top Export Partners</Text>
-            <Text size={14}>{exportPartners[0]}</Text>
-            <Text size={14}>{exportPartners[1]}</Text>
-            <Text size={14}>{exportPartners[2]}</Text>
+            <Text size={14}>{exportPartners[0]?.country}</Text>
+            <Text size={14}>{exportPartners[1]?.country}</Text>
+            <Text size={14}>{exportPartners[2]?.country}</Text>
           </Row>
         </Modal.Body>
       </Modal>
