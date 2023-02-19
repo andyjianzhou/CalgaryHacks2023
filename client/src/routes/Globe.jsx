@@ -13,9 +13,9 @@ function World() {
     const [visible, setVisible] = React.useState(false);
     const [exportPartners, setExportPartners] = useState([]);
     const [importPartners, setImportPartners] = useState([]);
-    const handler = () => {
+    const handler = (polygon) => {
       setVisible(true);
-      axios.get(`http://127.0.0.1:8000/exportPartners/usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`).then(response => {
         // handle the response data
         setExportPartners(response?.data);
         console.log(response?.data)
@@ -24,7 +24,7 @@ function World() {
         // handle any errors
         console.error(error);
       });
-      axios.get(`http://127.0.0.1:8000/importPartners/usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/importPartners/${polygon.properties.ISO_A3}`).then(response => {
         // handle the response data
         setImportPartners(response?.data);
       })
