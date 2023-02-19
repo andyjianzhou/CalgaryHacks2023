@@ -125,20 +125,30 @@ function World() {
   useEffect(() => {
     // make random range of numbers between 10000 - 50000
     const random = Math.floor(Math.random() * 50000) + 10000;
+    const randomRain = Math.random() * (1 - 0.5) + 0.5;
+    const randomPesticides = Math.random() * (0.1 - 0) + 0;
+    const randomTemp = Math.random() * (0.2 - 0) + 0;
+    console.log("Pred Yields: " + random, randomRain, randomPesticides, randomTemp);
 
     for (let i = 0; i < predYield.length; i++) {
       if (predYield[i].yield_predicted != null) {
-        dict[predYield[i].Country] = predYield[i].yield_predicted;
+        dict[predYield[i].Country] = [parseFloat(predYield[i].yield_predicted/10000).toFixed(2), parseFloat(predYield[i].average_rain_fall_mm_per_year).toFixed(2), predYield[i].pesticides_tonnes, parseFloat(predYield[i].avg_temp).toFixed(2)];
       }
     }
     // if the country name is in the dictionary, add the yield_predicted to the country feature
     for (let i = 0; i < countries.features.length; i++) {
       if (countries.features[i].properties.ADMIN in dict) {
-        countries.features[i].properties.yield_predicted =
-          dict[countries.features[i].properties.ADMIN];
-        // console.log("added to " + countries.features[i].properties.ADMIN)
+        countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN][0];
+        countries.features[i].properties.rainfall = dict[countries.features[i].properties.ADMIN][1];
+        countries.features[i].properties.pesticides = dict[countries.features[i].properties.ADMIN][2];
+        countries.features[i].properties.temperature = dict[countries.features[i].properties.ADMIN][3];
+
       } else {
-        countries.features[i].properties.yield_predicted = random;
+        countries.features[i].properties.yield_predicted = parseFloat(random/10000).toFixed(2);
+        countries.features[i].properties.rainfall = parseFloat(randomRain).toFixed(2);
+        countries.features[i].properties.pesticides = parseFloat(randomPesticides).toFixed(2);
+        countries.features[i].properties.temperature = parseFloat(randomTemp).toFixed(2);
+
       }
     }
   }, [predYield]);
@@ -232,6 +242,23 @@ function World() {
               ) : (
                 <Text size={16}>{exportPartners[2]?.country}</Text>
               )}
+            </Col>
+            
+          </Row>
+          <Row>
+            <Col span={12}>
+              <Text size={18} b>
+                Avg Rain percipitation (mm)
+              </Text>
+                <Text size={16}>{hoverD?.properties.rainfall}</Text>
+              <Text size={18} b>
+                Avg Temperature (C)
+              </Text>
+                <Text size={16}>{hoverD?.properties.temperature}</Text>
+                <Text size={18} b>
+                Avg Pesticides (tonnes)
+              </Text>
+                <Text size={16}>{hoverD?.properties.pesticides}</Text>
             </Col>
           </Row>
         </Modal.Body>
