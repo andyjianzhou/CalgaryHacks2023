@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { parseString } from 'xml2js';
+import { parseString } from 'browser-xml2js';
 const regionCodes = ["WLD", "NAC", "ECS", "EAS", "LCN", "SSF", "SAS", "MEA"]
 const Supply = {
   getExportPartners: async (countryCode) => {
