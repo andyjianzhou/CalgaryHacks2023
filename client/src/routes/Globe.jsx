@@ -2,6 +2,7 @@ import Globe from 'react-globe.gl';
 import { Modal, Row, Button, Text, Checkbox, Input } from "@nextui-org/react";
 import React from 'react'
 import * as ReactDOM from 'react-dom';
+import Supply from '../Supply.js';
 // follow the polygon layer example to add data
 import * as d3 from 'd3';
 
@@ -11,7 +12,13 @@ function World() {
     const [countries, setCountries] = useState({ features: []});
     const [hoverD, setHoverD] = useState();
     const [visible, setVisible] = React.useState(false);
-    const handler = () => setVisible(true);
+    const [exportPartners, setExportPartners] = useState([]);
+    const [importPartners, setImportPartners] = useState([]);
+    const handler = () => {
+      setVisible(true);
+      setImportPartners(Supply.getImportPartners('usa'));
+      setExportPartners(Supply.getExportPartners('usa'));
+    };
     const closeHandler = () => {
       setVisible(false);
       console.log("closed");
@@ -71,7 +78,14 @@ function World() {
         </Modal.Header>
         <Modal.Body>
           <Row justify="space-between">
-            <Text size={14}>Forgot password?</Text>
+            <Text size={18}>Top Import Partners</Text>
+            <Text size={14}>{importPartners[0]}</Text>
+            <Text size={14}>{importPartners[1]}</Text>
+            <Text size={14}>{importPartners[2]}</Text>
+            <Text size={18}>Top Export Partners</Text>
+            <Text size={14}>{exportPartners[0]}</Text>
+            <Text size={14}>{exportPartners[1]}</Text>
+            <Text size={14}>{exportPartners[2]}</Text>
           </Row>
         </Modal.Body>
       </Modal>
