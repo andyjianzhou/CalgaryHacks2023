@@ -40,12 +40,11 @@ app.get('/', (req, res) => {
     .on('end', () => {
       jsonData = JSON.stringify(results);
       console.log('CSV file successfully processed');
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.send(jsonData);
     });
-
   // create API response and send it to the frontend
-  res.setHeader('Content-Type', 'application/json');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.send(jsonData);
 });
 
 app.listen(port, () => {

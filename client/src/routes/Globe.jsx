@@ -13,6 +13,8 @@ function World() {
     const [visible, setVisible] = React.useState(false);
     const [exportPartners, setExportPartners] = useState([]);
     const [importPartners, setImportPartners] = useState([]);
+    const [predYield, setYield] = useState(0);
+
     const handler = () => {
       setVisible(true);
       axios.get(`http://127.0.0.1:8000/exportPartners/usa`).then(response => {
@@ -38,17 +40,50 @@ function World() {
       console.log("closed");
     };
 
-    useEffect(() => {
+     useEffect(() => {
         // load data
-        fetch('../datasets/ne_110m_admin_0_countries.geojson').then(res => res.json()).then(setCountries);
-        console.log("Globe.jsx running")    
+        // fetch('../datasets/ne_110m_admin_0_countries.geojson').then(res => res.json()).then(setCountries);
+        // console.log("Globe.jsx running")
+        // //fetch the data from the backend 
+        // fetch('http://127.0.0.1:8000/').then(res => res.json()).then(setYield);
+        Promise.all([
+          fetch('../datasets/ne_110m_admin_0_countries.geojson').then(res => res.json()),
+          fetch('http://127.0.0.1:8000/').then(res => res.json())
+        ]).then(([countries, yieldScores]) => {
+          setCountries(countries);
+          setYield(yieldScores);
+        });
+        
+        
     }, []);
     
     const colorScale = d3.scaleSequentialSqrt(d3.interpolateYlOrRd);
-
+    // map dataset name of yield to admin 0 name of country, they are the same
     // GDP per capita (avoiding countries with small pop)
     const getVal = feat => feat.properties.GDP_MD_EST / Math.max(1e5, feat.properties.POP_EST);
+    // feat is the country, map, then find it's column data yield_predicted
+    // const getVal = feat => feat.properties.yield_predicted;
+    // console.log(predYield)
+    // create for loop
+    // console.log("Pred Yields: " + predYield)
 
+    
+    // create a dictionary of country name and yield_predicted
+    const dict = {};
+    for (let i = 0; i < predYield.length; i++) {
+      dict[predYield[i].Country] = predYield[i].yield_predicted;
+    }
+    // if the country name is in the dictionary, add the yield_predicted to the country feature
+    for (let i = 0; i < countries.features.length; i++) {
+      if (countries.features[i].properties.ADMIN in dict) {
+        countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN];
+        console.log("added to " + countries.features[i].properties.ADMIN)
+      }
+    }
+
+    console.log(countries.features)
+
+    
     const maxVal = useMemo(
       () => Math.max(...countries.features.map(getVal)),
       [countries]
