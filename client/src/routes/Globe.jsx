@@ -16,14 +16,14 @@ import * as d3 from "d3";
 import { useRef, useEffect } from "react";
 
 function World() {
-    const { useState, useEffect, useMemo } = React;
-    const [countries, setCountries] = useState({ features: []});
-    const [hoverD, setHoverD] = useState();
-    const [visible, setVisible] = React.useState(false);
-    const [exportPartners, setExportPartners] = useState([]);
-    const [importPartners, setImportPartners] = useState([]);
-    const [predYield, setYield] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+  const { useState, useEffect, useMemo } = React;
+  const [countries, setCountries] = useState({ features: [] });
+  const [hoverD, setHoverD] = useState();
+  const [visible, setVisible] = React.useState(false);
+  const [exportPartners, setExportPartners] = useState([]);
+  const [importPartners, setImportPartners] = useState([]);
+  const [predYield, setYield] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const globeRef = useRef(null);
   useEffect(() => {
@@ -128,27 +128,50 @@ function World() {
     const randomRain = Math.random() * (1 - 0.5) + 0.5;
     const randomPesticides = Math.random() * (0.1 - 0) + 0;
     const randomTemp = Math.random() * (0.2 - 0) + 0;
-    console.log("Pred Yields: " + random, randomRain, randomPesticides, randomTemp);
+    console.log(
+      "Pred Yields: " + random,
+      randomRain,
+      randomPesticides,
+      randomTemp
+    );
 
     for (let i = 0; i < predYield.length; i++) {
       if (predYield[i].yield_predicted != null) {
-        dict[predYield[i].Country] = [parseFloat(predYield[i].yield_predicted/10000).toFixed(2), parseFloat(predYield[i].average_rain_fall_mm_per_year).toFixed(2), predYield[i].pesticides_tonnes, parseFloat(predYield[i].avg_temp).toFixed(2)];
+        dict[predYield[i].Country] = [
+          parseFloat(predYield[i].yield_predicted / 10000).toFixed(2),
+          parseFloat(predYield[i].average_rain_fall_mm_per_year).toFixed(2),
+          predYield[i].pesticides_tonnes,
+          parseFloat(predYield[i].avg_temp).toFixed(2),
+          parseFloat(predYield[i].yield_actual / 10000),
+        ];
       }
     }
     // if the country name is in the dictionary, add the yield_predicted to the country feature
     for (let i = 0; i < countries.features.length; i++) {
       if (countries.features[i].properties.ADMIN in dict) {
-        countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN][0];
-        countries.features[i].properties.rainfall = dict[countries.features[i].properties.ADMIN][1];
-        countries.features[i].properties.pesticides = dict[countries.features[i].properties.ADMIN][2];
-        countries.features[i].properties.temperature = dict[countries.features[i].properties.ADMIN][3];
-
+        countries.features[i].properties.yield_predicted =
+          dict[countries.features[i].properties.ADMIN][0];
+        countries.features[i].properties.rainfall =
+          dict[countries.features[i].properties.ADMIN][1];
+        countries.features[i].properties.pesticides =
+          dict[countries.features[i].properties.ADMIN][2];
+        countries.features[i].properties.temperature =
+          dict[countries.features[i].properties.ADMIN][3];
+        countries.features[i].properties.yield_actual =
+          dict[countries.features[i].properties.ADMIN][4];
       } else {
-        countries.features[i].properties.yield_predicted = parseFloat(random/10000).toFixed(2);
-        countries.features[i].properties.rainfall = parseFloat(randomRain).toFixed(2);
-        countries.features[i].properties.pesticides = parseFloat(randomPesticides).toFixed(2);
-        countries.features[i].properties.temperature = parseFloat(randomTemp).toFixed(2);
-
+        countries.features[i].properties.yield_predicted = parseFloat(
+          random / 10000
+        ).toFixed(2);
+        countries.features[i].properties.rainfall =
+          parseFloat(randomRain).toFixed(2);
+        countries.features[i].properties.pesticides =
+          parseFloat(randomPesticides).toFixed(2);
+        countries.features[i].properties.temperature =
+          parseFloat(randomTemp).toFixed(2);
+        countries.features[i].properties.yield_actual = parseFloat(
+          random / 10000
+        ).toFixed(2);
       }
     }
   }, [predYield]);
@@ -180,14 +203,13 @@ function World() {
         polygonLabel={({ properties: d }) => `
         <div style="background: rgba(0, 0, 0, 0.5); color: #fff; padding: 0.5em; border-radius: 10px;"> 
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          Crop Yield: <i>${d.yield_predicted}</i> t/ha after 1 year<br/>
-          Population: <i>${d.POP_EST}</i> <br/>
+          Future Crop Yield: <i>${d.yield_predicted}</i> t/ha 1 Yr Forecast<br/>
+          Current Crop Yield: <i>${d.yield_actual}</i> t/ha<br/>
         </div>
       `}
         onPolygonHover={setHoverD}
         onPolygonClick={() => handler(hoverD)}
         polygonsTransitionDuration={300}
-
       />
       <Modal
         closeButton
@@ -244,7 +266,6 @@ function World() {
                 <Text size={16}>{exportPartners[2]?.country}</Text>
               )}
             </Col>
-            
           </Row>
           <Row>
             <Col span={12}>
@@ -264,7 +285,7 @@ function World() {
               ) : (
                 <Text size={16}>{hoverD?.properties.temperature}</Text>
               )}
-                <Text size={18} b>
+              <Text size={18} b>
                 Avg Pesticides (tonnes)
               </Text>
               {isLoading ? (
