@@ -1,6 +1,10 @@
 import React from "react";
+import Typewriter from "typewriter-effect";
 
 function Home() {
+  const description =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
   return (
     <div className="flex h-screen w-full justify-center items-center">
       <div className="max-w-screen-lg w-[80%] flex justify-between">
@@ -9,10 +13,22 @@ function Home() {
           <h1 className="text-[#FE1E27] uppercase font-black text-9xl mb-12">
             Crop Yield
           </h1>
-          <p className="text-lg">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </p>
+          <div className="relative">
+            {/* Create spacing */}
+            <p className="text-lg ml-4 invisible">{description}</p>
+
+            {/* Typewriter effect */}
+            <p className="text-lg ml-4 absolute top-0 left-0">
+              <Typewriter
+                options={{
+                  delay: 50,
+                }}
+                onInit={(typewriter) => {
+                  typewriter.typeString(description).start();
+                }}
+              />
+            </p>
+          </div>
         </div>
 
         {/* Image and demo link */}
