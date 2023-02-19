@@ -43,6 +43,7 @@ function World() {
       .then((response) => {
         // handle the response data
         setImportPartners(response?.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         // handle any errors
@@ -50,6 +51,7 @@ function World() {
       });
   };
   const closeHandler = () => {
+    setIsLoading(true);
     setVisible(false);
     console.log("closed");
   };
@@ -156,7 +158,6 @@ function World() {
         }
         polygonSideColor={() => "rgba(0, 100, 0, 0.15)"}
         polygonStrokeColor={() => "#111"}
-        
         polygonLabel={({ properties: d }) => `
         <div style="background: rgba(0, 0, 0, 0.5); color: #fff; padding: 0.5em; border-radius: 10px;"> 
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
@@ -187,17 +188,41 @@ function World() {
               <Text size={18} b>
                 Top Suppliers
               </Text>
-              <Text size={16}>{importPartners[0]?.country}</Text>
-              <Text size={16}>{importPartners[1]?.country}</Text>
-              <Text size={16}>{importPartners[2]?.country}</Text>
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{importPartners[0]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{importPartners[1]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{importPartners[2]?.country}</Text>
+              )}
             </Col>
             <Col span={12} align="right">
               <Text size={18} b>
                 Top Supplied
               </Text>
-              <Text size={16}>{exportPartners[0]?.country}</Text>
-              <Text size={16}>{exportPartners[1]?.country}</Text>
-              <Text size={16}>{exportPartners[2]?.country}</Text>
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{exportPartners[0]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{exportPartners[1]?.country}</Text>
+              )}
+              {isLoading ? (
+                <div className="h-[12px] mt-3 animate-pulse w-3/4 rounded-full bg-slate-700"></div>
+              ) : (
+                <Text size={16}>{exportPartners[2]?.country}</Text>
+              )}
             </Col>
           </Row>
         </Modal.Body>
