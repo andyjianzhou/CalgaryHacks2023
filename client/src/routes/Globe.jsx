@@ -22,6 +22,8 @@ function World() {
     const [visible, setVisible] = React.useState(false);
     const [exportPartners, setExportPartners] = useState([]);
     const [importPartners, setImportPartners] = useState([]);
+    const [predYield, setYield] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const globeRef = useRef(null);
     useEffect(() => {
@@ -182,6 +184,7 @@ function World() {
         onPolygonHover={setHoverD}
         onPolygonClick={() => handler(hoverD)}
         polygonsTransitionDuration={300}
+        ref = {globeRef}
       />
       <Modal
         closeButton
