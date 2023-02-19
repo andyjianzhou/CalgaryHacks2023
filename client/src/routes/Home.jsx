@@ -1,11 +1,14 @@
 import React from "react";
 import Typewriter from "typewriter-effect";
+import Navbar from '../components/Navbar'
 
 function Home() {
   const description =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
   return (
+    <>
+    <Navbar/>
     <div className="flex h-screen w-full justify-center items-center">
       <div className="max-w-screen-lg w-[80%] flex justify-between">
         {/* Tagline and description */}
@@ -30,7 +33,6 @@ function Home() {
             </p>
           </div>
         </div>
-
         {/* Image and demo link */}
         <div className="mx-auto lg:mx-0">
           <div className="bg-white rounded-xl w-80 h-96 mb-7"></div>
@@ -40,6 +42,7 @@ function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
