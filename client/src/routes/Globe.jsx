@@ -2,7 +2,6 @@ import Globe from 'react-globe.gl';
 import { Modal, Row, Button, Text, Checkbox, Input } from "@nextui-org/react";
 import React from 'react'
 import * as ReactDOM from 'react-dom';
-import Supply from '../Supply.js';
 // follow the polygon layer example to add data
 import * as d3 from 'd3';
 
@@ -16,8 +15,8 @@ function World() {
     const [importPartners, setImportPartners] = useState([]);
     const handler = () => {
       setVisible(true);
-      setImportPartners(Supply.getImportPartners('usa'));
-      setExportPartners(Supply.getExportPartners('usa'));
+      //setImportPartners(Supply.getImportPartners('usa'));
+      //setExportPartners(Supply.getExportPartners('usa'));
     };
     const closeHandler = () => {
       setVisible(false);
