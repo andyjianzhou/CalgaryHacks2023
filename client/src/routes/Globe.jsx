@@ -1,5 +1,5 @@
 import Globe from 'react-globe.gl';
-
+import { Modal } from '@nextui-org/react';
 import React from 'react'
 import * as ReactDOM from 'react-dom';
 // follow the polygon layer example to add data
@@ -44,6 +44,7 @@ function World() {
         Population: <i>${d.POP_EST}</i>
       `}
       onPolygonHover={setHoverD}
+      onPolygonClick={showModal}
       polygonsTransitionDuration={300}
     />
   );
