@@ -16,8 +16,9 @@ function World() {
     const [predYield, setYield] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
-    const handler = () => {
+    const handler = (polygon) => {
       setVisible(true);
+      console.log(polygon.properties.ISO_A3)
       axios.get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`).then(response => {
         // handle the response data
         setExportPartners(response?.data);
@@ -112,7 +113,7 @@ function World() {
       for (let i = 0; i < countries.features.length; i++) {
         if (countries.features[i].properties.ADMIN in dict) {
           countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN];
-          console.log("added to " + countries.features[i].properties.ADMIN)
+          // console.log("added to " + countries.features[i].properties.ADMIN)
         } else {
           countries.features[i].properties.yield_predicted = random;
         }
@@ -149,7 +150,7 @@ function World() {
         Population: <i>${d.POP_EST}</i>
       `}
       onPolygonHover={setHoverD}
-      onPolygonClick={handler}
+      onPolygonClick={() => handler(hoverD)}
       polygonsTransitionDuration={300}
     />
       <Modal
