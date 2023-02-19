@@ -10,7 +10,7 @@ function Home() {
 
   const globeRef = useRef(null);
   const handleClick = () => {
-    window.location.href = '/globe';
+    window.location.href = "/globe";
   };
 
   useEffect(() => {
@@ -21,6 +21,11 @@ function Home() {
     globe.controls().enableZoom = false;
     globe.controls().enableRotate = false;
   }, [globeRef]);
+
+  function handleGlobeReady() {
+    console.log("Globe is ready.");
+    console.log(globeRef.current.canvas);
+  }
 
   return (
     <>
@@ -66,6 +71,7 @@ function Home() {
               height={800}
               backgroundColor="rgb(0,0,0,0)"
               onGlobeClick={handleClick}
+              onGlobeReady={handleGlobeReady}
             />
           </div>
         </div>
