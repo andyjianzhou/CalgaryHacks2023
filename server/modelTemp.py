@@ -11,10 +11,20 @@ from sklearn.metrics import r2_score
 
 
 yield_df_onehot = pd.get_dummies(yield_df, columns=['Area',"Item"], prefix = ['Country',"Item"])
-yield_df_onehot
 features=yield_df_onehot.loc[:, yield_df_onehot.columns != 'hg/ha_yield']
 label=yield_df['hg/ha_yield']
 features.head()
+# shift data to train forecast model
+forecast = 1
+# predict the yield for the next year
+features['Year'] = features['Year'].shift(-forecast)
+
+# drop the last row of data
+features.dropna(inplace=True)
+features.head()
+
+train_data, test_data, train_labels, test_labels = train_test_split(features, label, test_size=0.3, random_state=42)
+
 
 def compare_models(model):
     model_name = model.__class__.__name__

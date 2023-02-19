@@ -7,7 +7,7 @@ function Navbar() {
       <div className="flex py-6 max-w-screen-xl w-[90%] mx-auto items-center lg:gap-32 gap-4 lg:justify-start justify-evenly flex-col lg:flex-row">
         {/* Logo */}
         <Link to="/">
-          <h1 className="shrink-0 font-bold text-lg">CalgaryHacks</h1>
+          <h1 className="shrink-0 font-bold text-lg">CropWatch</h1>
         </Link>
 
         {/* Links */}

@@ -180,14 +180,14 @@ function World() {
         polygonLabel={({ properties: d }) => `
         <div style="background: rgba(0, 0, 0, 0.5); color: #fff; padding: 0.5em; border-radius: 10px;"> 
           <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-          Crop Yield: <i>${d.yield_predicted}</i> t/ha<br/>
+          Crop Yield: <i>${d.yield_predicted}</i> t/ha after 1 year<br/>
           Population: <i>${d.POP_EST}</i> <br/>
         </div>
       `}
         onPolygonHover={setHoverD}
         onPolygonClick={() => handler(hoverD)}
         polygonsTransitionDuration={300}
-        ref = {globeRef}
+
       />
       <Modal
         closeButton
