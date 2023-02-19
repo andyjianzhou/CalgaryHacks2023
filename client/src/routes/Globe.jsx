@@ -9,7 +9,7 @@ import {
   createTheme,
 } from "@nextui-org/react";
 import React from "react";
-import * as ReactDOM from "react-dom";
+import Fade from '../components/fade';
 import axios from "axios";
 // follow the polygon layer example to add data
 import * as d3 from "d3";
@@ -32,6 +32,8 @@ function World() {
     globe.controls().autoRotate = true;
     globe.controls().autoRotateSpeed = 0.1;
   }, [globeRef]);
+
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const handler = (polygon) => {
     setVisible(true);
@@ -211,6 +213,7 @@ function World() {
         onPolygonClick={() => handler(hoverD)}
         polygonsTransitionDuration={300}
       />
+      <Fade animationDuration={3000} className="cover" show={!hasLoaded} />
       <Modal
         closeButton
         blur
