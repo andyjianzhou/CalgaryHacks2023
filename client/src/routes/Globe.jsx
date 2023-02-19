@@ -1,5 +1,5 @@
 import Globe from 'react-globe.gl';
-import { Modal, Row, Button, Text, Checkbox, Input } from "@nextui-org/react";
+import { Modal, Row, Button, Text, Col, NextUIProvider, createTheme} from "@nextui-org/react";
 import React from 'react'
 import * as ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -17,7 +17,7 @@ function World() {
 
     const handler = () => {
       setVisible(true);
-      axios.get(`http://127.0.0.1:8000/exportPartners/usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`).then(response => {
         // handle the response data
         setExportPartners(response?.data);
         console.log(response?.data)
@@ -26,7 +26,7 @@ function World() {
         // handle any errors
         console.error(error);
       });
-      axios.get(`http://127.0.0.1:8000/importPartners/usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/importPartners/${polygon.properties.ISO_A3}`).then(response => {
         // handle the response data
         setImportPartners(response?.data);
       })
@@ -58,7 +58,36 @@ function World() {
     }, []);
     
     const colorScale = d3.scaleSequentialSqrt(d3.interpolateYlOrRd);
-    // map dataset name of yield to admin 0 name of country, they are the same
+
+    const theme = createTheme({
+      type: "dark", // it could be "light" or "dark"
+      theme: {
+        colors: {
+          // brand colors
+          primaryLight: '$green200',
+          primaryLightHover: '$green300',
+          primaryLightActive: '$green400',
+          primaryLightContrast: '$green600',
+          primary: '#4ADE7B',
+          primaryBorder: '$green500',
+          primaryBorderHover: '$green600',
+          primarySolidHover: '$green700',
+          primarySolidContrast: '$white',
+          primaryShadow: '$green500',
+    
+          gradient: 'linear-gradient(112deg, $blue100 -25%, $pink500 -10%, $purple500 80%)',
+          link: '#5E1DAD',
+    
+          // you can also create your own color
+          myColor: '#ff4ecd'
+    
+          // ...  more colors
+        },
+        space: {},
+        fonts: {}
+      }
+    })
+
     // GDP per capita (avoiding countries with small pop)
     const getVal = feat => feat.properties.GDP_MD_EST / Math.max(1e5, feat.properties.POP_EST);
     // feat is the country, map, then find it's column data yield_predicted
@@ -90,7 +119,7 @@ function World() {
     );
     colorScale.domain([0, maxVal]);
     return (
-    <div>
+    <NextUIProvider theme={theme}>
     <Globe
       globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
@@ -119,30 +148,32 @@ function World() {
         blur
         aria-labelledby="modal-title"
         open={visible}
+        //width="500px"
         onClose={closeHandler}
       >
         <Modal.Header>
-          <Text id="modal-title" size={18}>
-            Welcome to
-            <Text b size={18}>
-              NextUI
-            </Text>
+          <Text id="modal-title" b size={30}>
+              Stats
           </Text>
         </Modal.Header>
         <Modal.Body>
-          <Row justify="space-between">
-            <Text size={18}>Top Import Partners</Text>
-            <Text size={14}>{importPartners[0]?.country}</Text>
-            <Text size={14}>{importPartners[1]?.country}</Text>
-            <Text size={14}>{importPartners[2]?.country}</Text>
-            <Text size={18}>Top Export Partners</Text>
-            <Text size={14}>{exportPartners[0]?.country}</Text>
-            <Text size={14}>{exportPartners[1]?.country}</Text>
-            <Text size={14}>{exportPartners[2]?.country}</Text>
+          <Row>
+          <Col span={12}>
+            <Text size={18} b>Top Suppliers</Text>
+            <Text size={16}>{importPartners[0]?.country}</Text>
+            <Text size={16}>{importPartners[1]?.country}</Text>
+            <Text size={16}>{importPartners[2]?.country}</Text>
+          </Col>
+          <Col span={12} align="right">
+            <Text size={18} b>Top Supplied</Text>
+            <Text size={16}>{exportPartners[0]?.country}</Text>
+            <Text size={16}>{exportPartners[1]?.country}</Text>
+            <Text size={16}>{exportPartners[2]?.country}</Text>
+          </Col>
           </Row>
         </Modal.Body>
       </Modal>
-    </div>
+    </NextUIProvider>
   );
 }
 
