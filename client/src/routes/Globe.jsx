@@ -83,7 +83,7 @@ function World() {
     });
   }, []);
 
-  const colorScale = d3.scaleSequentialSqrt(d3.interpolateYlOrRd);
+  const colorScale = d3.scaleSequentialSqrt(d3.interpolateRdYlGn);
 
   const theme = createTheme({
     type: "dark", // it could be "light" or "dark"
