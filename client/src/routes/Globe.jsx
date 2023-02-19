@@ -15,7 +15,7 @@ function World() {
     const [importPartners, setImportPartners] = useState([]);
     const handler = () => {
       setVisible(true);
-      axios.get(`/api/get_export_partners/?country_code=usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/get_export_partners/?country_code=usa`).then(response => {
         // handle the response data
         setExportPartners(response.data.country);
       })
@@ -23,7 +23,7 @@ function World() {
         // handle any errors
         console.error(error);
       });
-      axios.get(`/api/get_import_partners/?country_code=usa`).then(response => {
+      axios.get(`http://127.0.0.1:8000/get_import_partners/?country_code=usa`).then(response => {
         // handle the response data
         setImportPartners(response.data.country);
       })
