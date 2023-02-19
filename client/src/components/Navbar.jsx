@@ -17,7 +17,11 @@ function Navbar() {
               Home
             </p>
           </Link>
-          <a href="" target="_blank" rel="noopener">
+          <a
+            href="https://devpost.com/software/crop-watch"
+            target="_blank"
+            rel="noopener"
+          >
             <p className="opacity-75 hover:opacity-100 transition-opacity duration-300">
               How it works
             </p>
