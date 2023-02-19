@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   const description =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+    "CropWatch predicts crop yields worldwide, using data analytics to help farmers and agribusinesses make informed decisions for increased efficiency and profitability.";
 
   const globeRef = useRef(null);
   const handleClick = () => {
@@ -34,8 +34,8 @@ function Home() {
         <div className="max-w-screen-lg w-[80%] flex justify-between">
           {/* Tagline and description */}
           <div className="w-1/2 lg:flex flex-col justify-center lg:visible hidden">
-            <h1 className="text-[#FE1E27] uppercase font-black text-9xl mb-12">
-              Crop Yield
+            <h1 className="text-[#FE1E27] uppercase font-black text-8xl mb-12">
+              Harvest Insight
             </h1>
             <div className="relative mb-12">
               {/* Create spacing */}

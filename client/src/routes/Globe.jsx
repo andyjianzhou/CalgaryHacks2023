@@ -9,7 +9,7 @@ import {
   createTheme,
 } from "@nextui-org/react";
 import React from "react";
-import Fade from '../components/fade';
+import Fade from "../components/fade";
 import axios from "axios";
 // follow the polygon layer example to add data
 import * as d3 from "d3";
