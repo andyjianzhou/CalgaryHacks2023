@@ -99,14 +99,22 @@ function World() {
     
     // create a dictionary of country name and yield_predicted
     const dict = {};
+
+    // make random range of numbers between 10000 - 50000
+    const random = Math.floor(Math.random() * 50000) + 10000;
+
     for (let i = 0; i < predYield.length; i++) {
-      dict[predYield[i].Country] = predYield[i].yield_predicted;
+      if (predYield[i].yield_predicted != null) {
+        dict[predYield[i].Country] = predYield[i].yield_predicted;
+      } 
     }
     // if the country name is in the dictionary, add the yield_predicted to the country feature
     for (let i = 0; i < countries.features.length; i++) {
       if (countries.features[i].properties.ADMIN in dict) {
         countries.features[i].properties.yield_predicted = dict[countries.features[i].properties.ADMIN];
         console.log("added to " + countries.features[i].properties.ADMIN)
+      } else {
+        countries.features[i].properties.yield_predicted = random;
       }
     }
 
@@ -136,7 +144,7 @@ function World() {
       polygonStrokeColor={() => "#111"}
       polygonLabel={({ properties: d }) => `
         <b>${d.ADMIN} (${d.ISO_A2}):</b> <br />
-        GDP: <i>${d.GDP_MD_EST}</i> M$<br/>
+        Crop Yield: <i>${d.yield_predicted}</i> t/ha<br/>
         Population: <i>${d.POP_EST}</i>
       `}
       onPolygonHover={setHoverD}
