@@ -20,5 +20,6 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('get_export_partners/', views.get_export_partners, name='get_export_partners'),    
+    path('get_export_partners/', views.get_export_partners, name='get_export_partners'), 
+    path('get_import_partners/', views.get_import_partners, name='get_import_partners'),    
 ]
