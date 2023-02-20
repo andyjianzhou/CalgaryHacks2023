@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   const description =
-    "CropWatch predicts crop yields worldwide, using data analytics to help farmers and agribusinesses make informed decisions for increased efficiency and profitability.";
+    "CropWatch, your pocket harvest insight wherever you are, whenever you want.";
 
   const globeRef = useRef(null);
   const handleClick = () => {

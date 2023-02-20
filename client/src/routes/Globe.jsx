@@ -14,6 +14,7 @@ import axios from "axios";
 // follow the polygon layer example to add data
 import * as d3 from "d3";
 import { useRef, useEffect } from "react";
+import Fade from "../components/fade";
 
 function World() {
   const { useState, useEffect, useMemo } = React;
@@ -36,19 +37,24 @@ function World() {
     globe.controls().autoRotateSpeed = 0.1;
   }, [globeRef]);
 
+  // create a dictionary of country name and yield_predicted
+  const dict = {};
+  const dictTest = {};
+
   const handler = (polygon) => {
     setClickD(polygon);
-    const wheat = [polygon.Wheat, "Wheat"];
-    const rice = [polygon.Rice, "Rice"];
-    const soybean = [polygon.Soybean, "Soybean"];
-    const potatoes = [polygon.Potatoes, "Potatoes"];
-    const sweetPotatoes = [polygon.Sweet, "Sweet Potatoes"];
-    const maize = [polygon.Maize, "Maize"];
-    const cassava = [polygon.Cassava, "Cassava"];
-    const other = [polygon.Other, "Other"];
-    const yams = [polygon.Yams, "Yams"];
-    const sorghum = [polygon.Sorghum, "Sorghum"];
-
+    console.log("CLICKED: ", polygon);
+    const wheat = [polygon.properties.Wheat, "Wheat"];
+    const rice = [polygon.properties.Rice, "Rice"];
+    const soybean = [polygon.properties.Soybean, "Soybean"];
+    const potatoes = [polygon.properties.Potatoes, "Potatoes"];
+    const sweetPotatoes = [polygon.properties.Sweet, "Sweet Potatoes"];
+    const maize = [polygon.properties.Maize, "Maize"];
+    const cassava = [polygon.properties.Cassava, "Cassava"];
+    const other = [polygon.properties.Other, "Other"];
+    const yams = [polygon.properties.Yams, "Yams"];
+    const sorghum = [polygon.properties.Sorghum, "Sorghum"];
+    console.log("RICE: ", rice);
     //filter
     const visibleProperties = [
       wheat,
@@ -62,14 +68,20 @@ function World() {
       yams,
       sorghum,
     ].filter((item) => {
-      return item[0];
+      console.log("DEBUG: ", item[0]);
+      console.log("DEBUG: ", item[0] !== undefined);
+      return item[0] !== undefined;
     });
 
     const midIndex = Math.ceil(visibleProperties.length / 2);
     setCol1(visibleProperties.slice(0, midIndex));
+    console.log("Properties: ", visibleProperties.slice(0, midIndex));
+    console.log("Properties: ", visibleProperties.slice(midIndex))
     setCol2(visibleProperties.slice(midIndex));
-    console.log(polygon);
     setVisible(true);
+
+    console.log("DICTTEST", dictTest)
+
     axios
       .get(`http://127.0.0.1:8000/exportPartners/${polygon.properties.ISO_A3}`)
       .then((response) => {
@@ -116,7 +128,7 @@ function World() {
     });
   }, []);
 
-  const colorScale = d3.scaleSequentialSqrt(d3.interpolateYlOrRd);
+  const colorScale = d3.scaleSequentialSqrt(d3.interpolateRdYlGn);
 
   const theme = createTheme({
     type: "dark", // it could be "light" or "dark"
@@ -154,19 +166,16 @@ function World() {
   // create for loop
   // console.log("Pred Yields: " + predYield)
 
-  // create a dictionary of country name and yield_predicted
-  const dict = {};
-  const dictTest = {};
   let labels = [
-    "Rice, paddy",
+    "Rice",
     "Wheat",
     "Sorghum",
     "Potatoes",
-    "Sweet potatoes",
+    "Sweet",
     "Maize",
     "Soybeans",
     "Cassava",
-    "Plantains and others",
+    "Others",
     "Yams",
   ];
   // avgYieldPerItemCountry = {};
@@ -183,41 +192,25 @@ function World() {
           parseFloat(predYield[i].yield_actual / 10000),
         ];
         if (predYield[i].Item == "Rice, paddy") {
-          // find index of 'Rice, paddy' in labels
-          const index = labels.indexOf(predYield[i].Item);
-
-          labels = labels.splice(index, 1);
-
-          labels.push("Rice");
-
           predYield[i].Item = predYield[i].Item.split(",")[0];
         }
         if (predYield[i].Item == "Plantains and others") {
-          const index = labels.indexOf(predYield[i].Item);
-
-          labels = labels.splice(index, 1);
-
-          labels.push("Others");
           predYield[i].Item = "Others";
         }
 
         if (predYield[i].Item == "Sweet potatoes") {
           // find index of 'Rice, paddy' in labels
-          const index = labels.indexOf(predYield[i].Item);
-
-          labels = labels.splice(index, 1);
-          labels.push("Sweet");
-
           predYield[i].Item = predYield[i].Item.split(" ")[0];
         }
 
         dictTest[predYield[i].Country] = {
           ...dictTest[predYield[i].Country],
-          [predYield[i].Item]: [predYield[i].average_yield_predicted],
+          [predYield[i].Item]: [parseFloat(predYield[i].average_yield_predicted/10000).toFixed(2)],
         };
       }
     }
     console.log("Dictionary Items: ", dictTest);
+    console.log("LABELS: ", labels)
     // if the country name is in the dictionary, add the yield_predicted to the country feature
     for (let i = 0; i < countries.features.length; i++) {
       const random = Math.floor(Math.random() * 50000) + 10000;
@@ -259,7 +252,12 @@ function World() {
   }, [predYield]);
   const getVal = (feat) => feat.properties.yield_predicted;
 
-  console.log("Countries:", countries);
+  // loop over countries to find Canada
+  for (let i = 0; i < countries.features.length; i++) {
+    if (countries.features[i].properties.ADMIN == "Canada") {
+      console.log(countries.features[i].properties);
+    }
+  }
   const maxVal = useMemo(
     () => Math.max(...countries.features.map(getVal)),
     [countries, getVal]
@@ -295,6 +293,7 @@ function World() {
             onPolygonClick={() => handler(hoverD)}
             polygonsTransitionDuration={300}
           />
+          <Fade animationDuration={3000} className="cover" show={true} />
           <Modal
             closeButton
             blur
@@ -329,10 +328,17 @@ function World() {
                   ) : (
                     <Text size={16}>{importPartners[2]?.country}</Text>
                   )}
+                  <br />
                   {col1.map((value, index) => (
+                    <>
+                    <br/>
+                    <Text size={18} b>
+                    {value[1]}
+                  </Text>
                     <Text key={index}>
-                      {value[1]}: {value[0][0]}
+                      {value[0]} (t/ha)
                     </Text>
+                    </>
                   ))}
                 </Col>
                 <Col span={12} align="right">
@@ -354,11 +360,17 @@ function World() {
                   ) : (
                     <Text size={16}>{exportPartners[2]?.country}</Text>
                   )}
-                  {console.log("col2", col2)}
+                  <br />
                   {col2.map((value, index) => (
+                    <>
+                    <br/>
+                    <Text size={18} b>
+                    {value[1]}
+                  </Text>
                     <Text key={index}>
-                      {value[1]}: {value[0]}
+                      {value[0]} (t/ha)
                     </Text>
+                    </>
                   ))}
                 </Col>
               </Row>
